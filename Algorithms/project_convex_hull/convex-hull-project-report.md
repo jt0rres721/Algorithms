@@ -4,7 +4,9 @@
 
 ### Design Discussion
 
-*Fill me in*
+I spoke with my brother Jeshua about my design. My base case is that I have either a single point, or a line 
+
+
 
 ### Theoretical Analysis - Convex Hull Divide-and-Conquer
 
