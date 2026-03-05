@@ -38,22 +38,76 @@ def _compute_hull_recursive(points):
 
 
 def merge_hulls(left, right):
-    points = left + right
-    points = sorted(points)
+    if not left:
+        return right
+    if not right:
+        return left
 
-    lower = []
-    for p in points:
-        while len(lower) >= 2 and cross(lower[-2], lower[-1], p) <= 0:
-            lower.pop()
-        lower.append(p)
+    nL = len(left)
+    nR = len(right)
 
-    upper = []
-    for p in reversed(points):
-        while len(upper) >= 2 and cross(upper[-2], upper[-1], p) <= 0:
-            upper.pop()
-        upper.append(p)
+    i = max(range(nL), key=lambda k: left[k][0])
 
-    return lower[:-1] + upper[:-1]
+    j = min(range(nR), key=lambda k: right[k][0])
+
+    done = False
+    while not done:
+        done = True
+
+        while cross(right[j], left[i], left[(i - 1) % nL]) >= 0:
+            i = (i - 1) % nL
+
+        while cross(left[i], right[j], right[(j + 1) % nR]) <= 0:
+            j = (j + 1) % nR
+            done = False
+
+    upper_i = i
+    upper_j = j
+
+    i = max(range(nL), key=lambda k: left[k][0])
+    j = min(range(nR), key=lambda k: right[k][0])
+
+    done = False
+    while not done:
+        done = True
+
+        while cross(right[j], left[i], left[(i + 1) % nL]) <= 0:
+            i = (i + 1) % nL
+
+        while cross(left[i], right[j], right[(j - 1) % nR]) >= 0:
+            j = (j - 1) % nR
+            done = False
+
+    lower_i = i
+    lower_j = j
+
+    hull = []
+
+    idx = upper_i
+    hull.append(left[idx])
+    while idx != lower_i:
+        idx = (idx - 1) % nL
+        hull.append(left[idx])
+
+    idx = lower_j
+    hull.append(right[idx])
+    while idx != upper_j:
+        idx = (idx - 1) % nR
+        hull.append(right[idx])
+
+    if len(hull) < 3:
+        return hull
+
+    total = 0
+    for i in range(len(hull)):
+        x1, y1 = hull[i]
+        x2, y2 = hull[(i + 1) % len(hull)]
+        total += (x2 - x1) * (y2 + y1)
+
+    if total > 0:
+        hull = hull[::-1]
+
+    return hull
 
 
 def compute_hull_other(points: list[tuple[float, float]]) -> list[tuple[float, float]]:
