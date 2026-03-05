@@ -247,28 +247,30 @@ The total space complexity comes out to #O(n).
 
 ### Design Discussion
 
-*Fill me in*
+No core tests failed
 
 ### Empirical Data - Convex Hull Divide-and-Conquer
 
 | N     | time (ms) |
 |-------|-----------|
-| 10    |           |
-| 100   |           |
-| 1000  |           |
-| 10000 |           |
-| 20000 |           |
-| 40000 |           |
-| 50000 |           |
+| 10    | 0.029     |
+| 100   | 0.331     |
+| 1000  | 4.694     |
+| 10000 | 44.121    |
+| 20000 | 86.321    |
+| 40000 | 186.633   |
+| 50000 | 215.033   |
 
 ### Comparison of Theoretical and Empirical Results
 
-- Theoretical order of growth: *copy from section above* 
-- Empirical order of growth (if different from theoretical): 
+- Theoretical order of growth: O(nlogn)
+- Empirical order of growth (if different from theoretical): Looks the same
 
-![img](img.png)
+![empirical_convex.svg](empirical_analysis/empirical_convex.svg)
 
-*Fill me in*
+They match very well. Towards the bigger numbers the empirical data seems to be faster than
+the theoretical, probably because the worst case scenario doesn't always happen and python
+runs some optimization. 
 
 ## Stretch 1
 
