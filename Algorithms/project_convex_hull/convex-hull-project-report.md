@@ -266,7 +266,7 @@ No core tests failed
 - Theoretical order of growth: O(nlogn)
 - Empirical order of growth (if different from theoretical): Looks the same
 
-![empirical_convex.svg](empirical_analysis/empirical_convex.svg)
+![empirical_convex.png](empirical_analysis/empirical_convex.png)
 
 They match very well. Towards the bigger numbers the empirical data seems to be faster than
 the theoretical, probably because the worst case scenario doesn't always happen and python
