@@ -266,7 +266,7 @@ No core tests failed
 - Theoretical order of growth: O(nlogn)
 - Empirical order of growth (if different from theoretical): Looks the same
 
-![empirical_convex.png](empirical_analysis/empirical_convex.png)
+![empirical_convex.png](empirical_convex.png)
 
 They match very well. Towards the bigger numbers the empirical data seems to be faster than
 the theoretical, probably because the worst case scenario doesn't always happen and python
@@ -276,33 +276,109 @@ runs some optimization.
 
 ### Design Discussion
 
-*Fill me in*
+I spoke with my brother once again, after counseling with chatgpt. I asked the ai tool about some different algorithms and
+ended up settling with the monotone chain algorithm. I will have ai help me write the algorithm, I will study it and learn everything
+about it and I will debug it myself since ai is bound to fail in one way or another. 
 
 ### Chosen Convex Hull Implementation Description
 
-*Fill me in*
+I chose the monotone chain algorithm, also known as Andrew's Algorithm. The main idea behind this algorithm is to 
+lexicographically sort the points, and then reconstruct the hull from the lower half first, and then the upper half, using
+the cross function to check if the subsequent points are part of the hull or not. Points which are part of the hull are added
+to an array with the upper or lower part of the hull, and then they are merged. 
+
+As we said the algorithm starts with a lexicographic sort. This sorts all the points in order of increasing x values,
+and if there is any tie between x values they are sorted in increasing y values. This ensures if the point list is 
+read from beginning to end, it will be read from left to right, which is essential for the algorithm. 
+
+Then the algorithm proceeds to build the lower part of the hull. It creates a list to append the hull points to. 
+It starts iterating through the points from left to right, adding each point until there is at least two points in the 
+lower list. Once there are at least two points in the lower list, the third point is used to check if the second point is a 
+valid point of the hull.  If the algorithm determines it the second point was not valid, it gets removed and the third gets
+added to be compared again. If the second point was valid, it remains in the list and the third point gets added to be compared
+with the subsequent point. 
+
+The algorithm does this by using the cross formula provided. The cross formula essentially checks if three points form a left turn
+or a right turn. For the lower hull we check if the point being evaluated creates a right turn when compared to the next point. 
+It would look like this:
+
+    --> -->  |
+             v
+
+If we encounter a right turn in the lower hull, it must mean that the middle
+point is not part of the convex hull. This is because the convex hull needs to include
+all possible lines between points, and if there is a right turn from a to b to c
+in the lower hull, a direct line must be possible between a and c. 
+
+The algorithm also pops points that are collinear. They would look like this:
+
+    ^
+    |
+    ^
+    |
+    ^
+    |
+This is because if a b and c are collinear, b is irrelevant and a single line
+could connect both a and c. 
+
+Whether the turn created by 3 points is a left turn, a right turn or just
+collinear is found with the cross formula, which returns positive, negative or 0 for 
+each value respectively. 
+
+The algorithm continues iterating through all points of the hull from left to right
+for the lower hull, popping invalid points and adding only valid points which make a 
+left turn or go straight horizontally. 
+
+It goes through all the points from left to right, but because of the cross function check it only 
+records the points corresponding to the lower part of the hull. 
+
+We then do the same process for the upper hull, except we use a reverse list of the points in order to iterate from the points
+from the right to the left. The algorithm proceeds to iterate through the points again, checking that there is only
+left turns or straight horizontal lines, no invalid points like with the lower hull. 
+
+Both the lower and upper hull construction check that no right or collinear turns are generated, only left turns. 
+The lower hull iterates all points from left to right, and the right hull construction iterates all points from
+right to left. 
+This essentially ensures the convex hull is generated with the points going counterclockwise. 
+
+After both hulls are constructed, the upper and lower hulls are merged. Since both hulls were constructed iterating
+through all the points, the first and last point of both hulls are bound to be duplicate. We simply merge both hulls 
+up to and excluding their last value so no points are repeated, and what results is our final convex hull.
 
 ### Empirical Data
 
 | N     | time (ms) |
 |-------|-----------|
-| 10    |           |
-| 100   |           |
-| 1000  |           |
-| 10000 |           |
-| 20000 |           |
-| 40000 |           |
-| 50000 |           |
+| 10    | 0.011     |
+| 100   | 0.124     |
+| 1000  | 1.32      |
+| 10000 | 14.678    |
+| 20000 | 33.933    |
+| 40000 | 65.976    |
+| 50000 | 88.414    |
 
 ### Comparison of Chosen Algorithm with Divide-and-Conquer Convex Hull
 
 #### Algorithmic Differences
 
-*Fill me in*
+Both convex hull algorithms have a time complexity of O(nlogn). They both start with a sort that contributes to this time
+complexity. 
+
+The monotone chain algorithm doesn't use recursion like the DVCQ algorithm. 
+
+The monotone chain algorithm is also much simpler coding. 
+
 
 #### Performance Differences
 
-*Fill me in*
+
+![comparison.png](comparison.png)
+Dataset 1 corresponds to the Monotone Chain Algorithm, Dataset 2 corresponds to the DVCQ algorithm
+
+Looking at the empirical data we can see that both algorithms have a similar order of growth, but it seems the monotone
+chain algorithm has a smaller constant runtime than the DVCQ algorithm, since its runtime values grow in similar proportion
+but are generally smaller than the DVCQ algorithm.
+
 
 ## Stretch 2
 

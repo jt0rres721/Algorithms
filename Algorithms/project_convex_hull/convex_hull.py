@@ -111,5 +111,30 @@ def merge_hulls(left, right):
 
 
 def compute_hull_other(points: list[tuple[float, float]]) -> list[tuple[float, float]]:
-    """Return the subset of provided points that define the convex hull"""
-    return []
+    """Return the subset of provided points that define the convex hull
+       using the Monotone Chain algorithm."""
+
+    if len(points) <= 1:
+        return points
+
+    # Sort points lexicographically
+    points = sorted(points)
+
+    # Build lower hull
+    lower = []
+    for p in points:
+        while len(lower) >= 2 and cross(lower[-2], lower[-1], p) <= 0:
+            lower.pop()
+        lower.append(p)
+
+    # Build upper hull
+    upper = []
+    for p in reversed(points):
+        while len(upper) >= 2 and cross(upper[-2], upper[-1], p) <= 0:
+            upper.pop()
+        upper.append(p)
+
+    # Remove duplicate endpoints and combine
+    hull = lower[:-1] + upper[:-1]
+
+    return hull

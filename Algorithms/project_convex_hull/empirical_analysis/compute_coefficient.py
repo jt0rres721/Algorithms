@@ -1,4 +1,6 @@
 import json
+from math import log
+
 import matplotlib.pyplot as plt
 
 
@@ -15,7 +17,7 @@ def main():
 
     def theoretical_big_o(n):
         # FILL THIS IN with your theoretical time complexity
-        return 1
+        return n*log(n)
 
     coeffs = compute_coefficient(runtimes, theoretical_big_o)
 
