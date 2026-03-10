@@ -1,3 +1,5 @@
+import math
+
 def align(
     seq1: str,
     seq2: str,
@@ -22,20 +24,43 @@ def align(
     m = len(seq1)
     n = len(seq2)
 
-    dp = [[0] * (m + 1) for _ in range(n + 1)]
+    if banded_width != -1 and abs(n - m) > banded_width:
+        return math.inf, None, None
+
+    if banded_width == -1:
+        dp = [[0] * (m + 1) for _ in range(n + 1)]
+    else:
+        dp = [[math.inf] * (m + 1) for _ in range(n + 1)]
+
     trace =  [[None]*(m+1) for _ in range(n+1)]
 
-    for j in range(1, m + 1):
-        dp[0][j] = j * indel_penalty
-        trace[0][j] = "L"
-
-    for i in range(1, n + 1):
-        dp[i][0] = i * indel_penalty
-        trace[i][0] = "U"
-
-
-    for i in range(1, n + 1):
+    if banded_width == -1:
         for j in range(1, m + 1):
+            dp[0][j] = j * indel_penalty
+            trace[0][j] = "L"
+
+        for i in range(1, n + 1):
+            dp[i][0] = i * indel_penalty
+            trace[i][0] = "U"
+    else:
+        for j in range(1, min(m, banded_width) + 1):
+            dp[0][j] = j * indel_penalty
+            trace[0][j] = "L"
+
+        for i in range(1, min(n, banded_width) + 1):
+            dp[i][0] = i * indel_penalty
+            trace[i][0] = "U"
+
+
+
+    for i in range(1, n + 1):
+        if banded_width == -1:
+            j_start = 1
+            j_end = m
+        else:
+            j_start = max(1, i - banded_width)
+            j_end = min(m, i + banded_width)
+        for j in range(j_start, j_end + 1):
             compute_cell(dp, trace, seq1, seq2, i, j, match_award, indel_penalty, sub_penalty)
 
     complete_seq1 = []
