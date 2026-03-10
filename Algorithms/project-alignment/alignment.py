@@ -43,14 +43,7 @@ def align(
             dp[i][0] = i * indel_penalty
             trace[i][0] = "U"
     else:
-        for j in range(1, min(m, banded_width) + 1):
-            dp[0][j] = j * indel_penalty
-            trace[0][j] = "L"
-
-        for i in range(1, min(n, banded_width) + 1):
-            dp[i][0] = i * indel_penalty
-            trace[i][0] = "U"
-
+        dp[0][0] = 0
 
 
     for i in range(1, n + 1):
@@ -99,7 +92,6 @@ def compute_cell(
         match_award: int,
         indel_penalty: int,
         sub_penalty: int,
-        gap= "-"
 ) -> None:
     if seq1[j - 1] == seq2[i - 1]:
         diff = match_award
