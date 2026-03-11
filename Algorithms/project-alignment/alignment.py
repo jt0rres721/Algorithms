@@ -29,12 +29,7 @@ def align(
 
     if banded_width == -1:
         dp = [[0] * (m + 1) for _ in range(n + 1)]
-    else:
-        dp = [[math.inf] * (m + 1) for _ in range(n + 1)] #too lengthy
-
-    trace =  [[None]*(m+1) for _ in range(n+1)]
-
-    if banded_width == -1:
+        trace = [[None] * (m + 1) for _ in range(n + 1)]
         for j in range(1, m + 1):
             dp[0][j] = j * indel_penalty
             trace[0][j] = "L"
@@ -43,6 +38,8 @@ def align(
             dp[i][0] = i * indel_penalty
             trace[i][0] = "U"
     else:
+        dp = [[math.inf] * (m + 1) for _ in range(n + 1)]  # too lengthy
+        trace = [[None] * (m + 1) for _ in range(n + 1)]
         dp[0][0] = 0
         for j in range(1, banded_width+1):
             dp[0][j] = j * indel_penalty
@@ -86,9 +83,9 @@ def align(
     complete_seq2 = "".join(reversed(complete_seq2))
     cost = dp[n][m]
 
-    print()
-    for row in dp:
-        print(row)
+    #print()
+    #for row in dp:
+    #    print(row)
 
 
     return cost, complete_seq1, complete_seq2
