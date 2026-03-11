@@ -5,7 +5,7 @@ from pathlib import Path
 from time import time
 
 this_folder = os.path.dirname(__file__)
-sys.path.append(os.path.join(this_folder, "../.."))
+sys.path.append(os.path.join(this_folder, "../../Algorithms"))
 
 from encrypt_decrypt_files import process as encrypt_decrypt
 

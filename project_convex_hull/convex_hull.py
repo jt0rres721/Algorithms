@@ -1,4 +1,4 @@
-from Algorithms.project_convex_hull.test_utils import cross
+from project_convex_hull.test_utils import cross
 # from plotting import draw_line, draw_hull, circle_point
 
 
