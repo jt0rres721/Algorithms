@@ -578,17 +578,72 @@ with 3000 n values.
 
 ### Design Experience
 
-*Fill me in*
+I spoke with my brother again. For this stretch I will create an independent python file that imports my alignment code.
+I will have it read from the file(I will admittedly need some help from the TA's and internet to figure out how to do
+this), and I will store all the sequences in a list or dictionary. 
+After that I will create a loop to do unbanded alignment on all the sequences compared to the unknown sequence, and 
+I will pick the smallest value as the culprit. 
 
 ### Code
 
 ```python
-     # Fill me in
+    from alignment import align
+    
+    def parse_fasta(filename):
+        sequences = {}
+        with open(filename) as f:
+            lines = f.readlines()
+        for i in range(0, len(lines), 2):
+            metadata = lines[i].strip()
+            sequence = lines[i + 1].strip()
+            species_tag = metadata.split("_")[1]
+            sequences[species_tag] = sequence
+        return sequences
+    
+    species_map = {
+        "hg38":     "Human",
+        "panTro4":  "Chimp",
+        "rheMac3":  "Rhesus macaque",
+        "canFam3":  "Dog",
+        "rn5":      "Rat",
+        "mm10":     "Mouse",
+        "unknown":  "Unknown suspect",
+    }
+    
+    sequences = parse_fasta("lct_exon8.txt")
+    unknown_seq = sequences["unknown"]
+    
+    best_match = None
+    best_score = float("inf")  #because every subsequent value that's better needs to be smaller. 
+    
+    for tag, seq in sequences.items():
+        if tag == "unknown":
+            continue
+        score, _, _ = align(unknown_seq, seq)
+        print(f"{species_map[tag]}: score = {score}")
+        if score < best_score:
+            best_score = score
+            best_match = tag                
+    
+    print(f"\nClosest match: {species_map[best_match]} (score: {best_score})")
 ```
 
 ### Alignment Scores
 
-*Fill me in*
+Human: score = -3113
+Chimp: score = -3097
+Rhesus macaque: score = -3162
+Dog: score = -3111
+Rat: score = -4343
+Mouse: score = -3835
+
+Closest match: Rat (score: -4343)
+
+
+It was the Rat! The kid probably had some candy, and they wanted to get their hands on it. 
+
+I found the match with the code above, parsing the txt file for the sequences and then 
+getting each of the scores of their unrestricted alignments with the unknown sequence. 
 
 ## Stretch 2
 
