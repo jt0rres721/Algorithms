@@ -1,2 +1,4 @@
 /project_convex_hull/empirical_analysis/_dvcq_convex_hull_runtimes.json
 /project_convex_hull/empirical_analysis/_other_convex_hull_runtimes.json
+/project-alignment/empirical_analysis/_banded_align_runtimes.json
+/project-alignment/empirical_analysis/_unbanded_align_runtimes.json
