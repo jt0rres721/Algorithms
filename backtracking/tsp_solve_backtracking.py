@@ -54,7 +54,28 @@ def random_tour(edges: list[list[float]], timer: Timer) -> list[SolutionStats]:
 
 
 def greedy_tour(edges: list[list[float]], timer: Timer) -> list[SolutionStats]:
-    return []
+    n = len(edges)
+    solutions = []
+    best_score = math.inf
+
+    #loop to iterate through different paths
+    for i in range(n):
+        unvisited = set(range(n))
+        tour = [i]
+        unvisited.remove(i)
+        while unvisited and not timer.time_out():   #stops after visiting all nodes or timing out
+            current = tour[-1]
+            next_node = min(unvisited, key=lambda j: edges[current][j])
+            tour.append(next_node)
+            unvisited.remove(next_node)
+        score = score_tour(tour, edges)
+
+        if not math.isinf(score):
+            if best_score > score:
+                solutions.append(SolutionStats(tour, score, timer.time(), 0, 0, 0, 0, 0))
+                best_score = score
+
+    return solutions
 
 
 def backtracking(edges: list[list[float]], timer: Timer) -> list[SolutionStats]:

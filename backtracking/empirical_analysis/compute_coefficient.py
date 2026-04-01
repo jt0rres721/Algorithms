@@ -10,7 +10,7 @@ def main():
 
     def theoretical_big_o(n, _):
         # FILL THIS IN with your theoretical time complexity
-        return 1
+        return (n*n*n)
 
     # Changing these values takes a slice of your runtimes corresponding with the indices
 
