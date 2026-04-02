@@ -113,7 +113,7 @@ could come closer to the theoretical.
 I spoke to my brother again. I will use a stack to keep track of the current step in the backtracking algorithm. 
 I will place a set of unvisited nodes in this stack along with a partial path represented by a list. I will store
 every partial path with its respective unvisited set in the stack, and I will store a path in the solutions list
-if the size of the path is the same as the number of nodes.
+if the size of the path is the same as the number of nodes(meaning all nodes were visited).
 
 ### Theoretical Analysis - Backtracking
 
@@ -153,7 +153,7 @@ Let's look at the annotated code for space complexity:
         n = len(edges)
         solutions = []                 #O(n) at worst
         best_score = math.inf
-        stack = [([0], set(range(1, n)))]      #Stores O(n) values up to O(n) times, so O(n^2)
+        stack = [([0], set(range(1, n)))]      #Stores O(n!) values up to O(n) times, so O(n*n!)
     
         while stack and not timer.time_out():
             path, unvisited = stack.pop()
@@ -173,53 +173,64 @@ Let's look at the annotated code for space complexity:
         return solutions
 
 Everything becomes overshadowed by the stack storing all the partial paths and their respective visited nodes,
-space complexity comes out to O(n^2)
+space complexity comes out to O(n*n!)
 
 
 ### Empirical Data - Backtracking
 
-| N   | reduction | time (ms) |
-|-----|-----------|-----------|
-| 5   | 0         |           |
-| 10  | 0         |           |
-| 15  | 0         |           |
-| 20  | 0         |           |
-| 25  | 0         |           |
-| 30  | 0         |           |
-| 35  | 0         |           |
-| 40  | 0         |           |
-| 45  | 0         |           |
-| 50  | 0         |           |
+| Size | Reduction | Time (sec) |
+|------|-----------|------------|
+| 5    | 0         | 0.0        |
+| 6    | 0         | 0.0        |
+| 7    | 0         | 0.002      |
+| 8    | 0         | 0.013      |
+| 9    | 0         | 0.099      |
+| 10   | 0         | 0.907      |
+
+Started timing out at 11
 
 ### Comparison of Theoretical and Empirical Results - Backtracking
 
-- Theoretical order of growth: 
-- Empirical order of growth (if different from theoretical): 
+- Theoretical order of growth: O(n*n!)
+- Empirical order of growth (if different from theoretical): the same
+
+![empirical_backtracking.png](empirical_backtracking.png)
+
+Looks like theoretical matches empirical well. You can see how they both start shooting up at the same place
 
 ### Greedy v Backtracking
 
-*Fill me in*
+I've come to the conclusion that greedy is a faster algorithm for this problem, while using backtracking is much 
+slower but also more thorough. Greedy may not always find the absolute cheapest path, no matter how much time it has,
+whereas with backtracking the algorithm will find the best path given enough time and patience
+
+![greedy_vs_backtracking.png](greedy_vs_backtracking.png)
 
 ### Water Bottle Scenario 
 
 #### Scenario 1
 
-**Algorithm:** 
+Backtracking
 
-*Fill me in*
+This algorithm looks for the best possible value without ignoring or pruning any branches. This will ensure that 
+absolutely every single path combination is observed and the boss receives the absolute best.
+
 
 #### Scenario 2
 
-**Algorithm:** 
+Greedy
 
-*Fill me in*
+The boss needs a solution quickly and is too concerned over the cost of the sequences. Greedy will find quick, reasonable
+solutions before any backtracking algorithm. 
+
 
 #### Scenario 3
 
-**Algorithm:** 
+Backtracking with BSSF
 
-*Fill me in*
-
+Just like with scenario 1, my boss wants the best solution possible. The only difference is that there are some road closures,
+which is similar to pruning branches with BSSF. I can treat the closed roads as pruned branches and this algorithm will
+deliver the best solution. 
 
 ## Stretch 1
 

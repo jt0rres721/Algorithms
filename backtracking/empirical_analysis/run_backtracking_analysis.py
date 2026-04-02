@@ -45,7 +45,7 @@ def main(input):
 
 
 if __name__ == "__main__":
-    sizes = [5, 6, 7, 8, 9, 10, 11, 12]
+    sizes = [5, 6, 7, 8, 9, 10]
     reduction = [0]
 
     iterations = 10
