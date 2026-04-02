@@ -79,7 +79,27 @@ def greedy_tour(edges: list[list[float]], timer: Timer) -> list[SolutionStats]:
 
 
 def backtracking(edges: list[list[float]], timer: Timer) -> list[SolutionStats]:
-    return []
+    n = len(edges)
+    solutions = []
+    best_score = math.inf
+    stack = [([0], set(range(1, n)))]
+
+    while stack and not timer.time_out():
+        path, unvisited = stack.pop()
+
+        if len(path) == n:
+            score = score_tour(path, edges)
+            if best_score > score:
+                solutions.append(SolutionStats(path, score, timer.time(), 0, 0, 0, 0, 0))
+                best_score = score
+
+        else:
+            for node in unvisited:
+                new_path = path + [node]
+                new_unvisited = unvisited - {node}
+                stack.append((new_path,new_unvisited))
+
+    return solutions
 
 def backtracking_bssf(edges: list[list[float]], timer: Timer) -> list[SolutionStats]:
     return []

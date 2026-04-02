@@ -110,17 +110,71 @@ could come closer to the theoretical.
 
 ### Design Experience
 
-*Fill me in*
+I spoke to my brother again. I will use a stack to keep track of the current step in the backtracking algorithm. 
+I will place a set of unvisited nodes in this stack along with a partial path represented by a list. I will store
+every partial path with its respective unvisited set in the stack, and I will store a path in the solutions list
+if the size of the path is the same as the number of nodes.
 
 ### Theoretical Analysis - Backtracking
 
 #### Time 
+Let's look at the annotated code for time complexity:
 
-*Fill me in*
+    def backtracking(edges: list[list[float]], timer: Timer) -> list[SolutionStats]:
+        n = len(edges)
+        solutions = []
+        best_score = math.inf
+        stack = [([0], set(range(1, n)))]
+    
+        while stack and not timer.time_out():  #Runs up to O(n!) times, once for every possible node on the stack
+            path, unvisited = stack.pop()    
+    
+            if len(path) == n:
+                score = score_tour(path, edges)        #O(n) 
+                if best_score > score:
+                    solutions.append(SolutionStats(path, score, timer.time(), 0, 0, 0, 0, 0))
+                    best_score = score
+    
+            else:
+                for node in unvisited:          #O(n) times again, within O(n!)
+                    new_path = path + [node]
+                    new_unvisited = unvisited - {node}    #set lookup is O(1)
+                    stack.append((new_path,new_unvisited))
+    
+        return solutions
+
+Calculating the score takes time, but becomes overshadowed by the while loop and the branching into partial paths.
+Total time complexity comes out to O(n!) * O(n) = O(n*n!).
 
 #### Space
+Let's look at the annotated code for space complexity: 
+   
+    def backtracking(edges: list[list[float]], timer: Timer) -> list[SolutionStats]:
+        n = len(edges)
+        solutions = []                 #O(n) at worst
+        best_score = math.inf
+        stack = [([0], set(range(1, n)))]      #Stores O(n) values up to O(n) times, so O(n^2)
+    
+        while stack and not timer.time_out():
+            path, unvisited = stack.pop()
+    
+            if len(path) == n:
+                score = score_tour(path, edges)
+                if best_score > score:
+                    solutions.append(SolutionStats(path, score, timer.time(), 0, 0, 0, 0, 0)) 
+                    best_score = score
+    
+            else:
+                for node in unvisited:
+                    new_path = path + [node]                 #O(n)
+                    new_unvisited = unvisited - {node}          #O(n)
+                    stack.append((new_path,new_unvisited))
+    
+        return solutions
 
-*Fill me in*
+Everything becomes overshadowed by the stack storing all the partial paths and their respective visited nodes,
+space complexity comes out to O(n^2)
+
 
 ### Empirical Data - Backtracking
 
