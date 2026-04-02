@@ -25,7 +25,7 @@ def _preprocessing(size, reduction):
 
 
 def _backtracking(*edges):
-    timer = Timer(30)
+    timer = Timer(60)
     backtracking(edges, timer)
 
 
@@ -45,7 +45,7 @@ def main(input):
 
 
 if __name__ == "__main__":
-    sizes = [5, 10, 15, 20, 25, 30, 35, 40, 45, 50]
+    sizes = [5, 6, 7, 8, 9, 10, 11, 12]
     reduction = [0]
 
     iterations = 10
