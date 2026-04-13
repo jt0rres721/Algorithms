@@ -82,3 +82,37 @@ def branch_and_bound_smart(
     edges: list[list[float]], timer: Timer
 ) -> list[SolutionStats]:
     return []
+
+def reduce_cost_matrix(matrix: list[list[float]]) -> tuple[list[list[float]], float]:
+    n = len(matrix)
+    m_copy = [row[:] for row in matrix]
+    total_cost = 0.0
+
+    #Row reduction
+    for r in range(n):
+        row_min = min(m_copy[r])
+        if row_min == math.inf:
+            continue
+        if row_min == 0:
+            continue
+        total_cost += row_min
+        for c in range(n):
+            if m_copy[r][c] != math.inf:
+                m_copy[r][c] = m_copy[r][c] - row_min
+
+
+    #Column reduction
+    for c in range(n):
+        col_min = min(m_copy[r][c] for r in range(n))
+        if col_min == math.inf:
+            continue
+        if col_min == 0:
+            continue
+        total_cost += col_min
+
+        for r in range(n):
+            if m_copy[r][c] != math.inf:
+                m_copy[r][c] = m_copy[r][c] - col_min
+
+
+    return m_copy, total_cost
