@@ -9,12 +9,12 @@ def main():
 
     def theoretical_big_o(n):
         # FILL THIS IN with your theoretical time complexity
-        return 1
+        return n^3 * 3^n
 
     # Changing these values takes a slice of your runtimes corresponding with the indices
 
     start = None
-    end = None
+    end = 20
 
     compute_coefficient(filename, theoretical_big_o, start, end)
 
