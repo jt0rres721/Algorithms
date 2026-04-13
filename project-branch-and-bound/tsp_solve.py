@@ -117,7 +117,86 @@ def backtracking(edges: list[list[float]], timer: Timer) -> list[SolutionStats]:
 
 
 def branch_and_bound(edges: list[list[float]], timer: Timer) -> list[SolutionStats]:
-    return []
+    n = len(edges)
+    solutions = []
+    nodes_expanded = 0
+    nodes_pruned = 0
+    max_queue_size = 0
+
+    inf_edges = [row[:] for row in edges]
+    for i in range(n):
+        inf_edges[i][i] = math.inf
+
+    greedy_stats = greedy_tour(edges, timer)
+    if greedy_stats:
+        bssf_score = greedy_stats[-1].score
+        bssf_tour = greedy_stats[-1].tour
+    else: #No solution found
+        bssf_score = math.inf
+        bssf_tour = []
+
+
+
+    root_matrix, root_cost = reduce_cost_matrix(inf_edges)
+    stack = [([0], root_matrix, root_cost)]
+
+    while stack and not timer.time_out():
+        if len(stack) > max_queue_size:
+            max_queue_size = len(stack)
+
+        path, matrix, cost = stack.pop()
+        nodes_expanded += 1
+
+        if cost >= bssf_score:
+            nodes_pruned += 1
+            continue
+
+        current_city = path[-1]
+
+        if len(path) == n:
+            tour_score = score_tour(path, edges)
+            if tour_score < bssf_score:
+                bssf_score = tour_score
+                bssf_tour = path
+                solutions.append(SolutionStats(path, tour_score, timer.time(), 0, 0, 0, 0, 0))
+            continue
+
+        visited = set(path)
+
+        for next_city in range(n):
+            if next_city in visited:
+                continue
+            if matrix[current_city][next_city] == math.inf:
+                continue
+
+
+            edge_cost = matrix[current_city][next_city]
+            child_cost = cost + edge_cost
+
+            child_matrix = [row[:] for row in matrix]
+            for col in range(n):
+                child_matrix[current_city][col] = math.inf
+            for row in range(n):
+                child_matrix[row][next_city] = math.inf
+
+            child_matrix[next_city][path[0]] = math.inf
+
+            child_matrix, reduction_cost = reduce_cost_matrix(child_matrix)
+            child_cost += reduction_cost
+
+            if child_cost >= bssf_score:
+                nodes_pruned += 1
+                continue
+
+            stack.append((path + [next_city], child_matrix, child_cost))
+
+    if not solutions and not math.isinf(bssf_score):
+        solutions.append(SolutionStats(bssf_tour, bssf_score, timer.time(), 0,0,0,0,0))
+
+
+    return solutions
+
+
 
 
 def branch_and_bound_smart(
